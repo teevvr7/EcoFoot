@@ -1,4 +1,13 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile
+} from 'firebase/auth';
+import { auth } from '../firebase/config';
+import { createUserProfile, getUserProfile } from '../services/firebaseService';
 
 const AuthContext = createContext();
 
@@ -8,50 +17,64 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Load user from localStorage when app starts
-  useEffect(() => {
-    const savedUser = localStorage.getItem('ecofoot-user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
-  }, []);
-
-  const login = (email, password) => {
-    console.log('Logging in:', email);
-    const userData = {
-      email,
-      displayName: email.split('@')[0],
-      uid: 'user-' + Date.now()
-    };
-    setUser(userData);
-    localStorage.setItem('ecofoot-user', JSON.stringify(userData));
-    return Promise.resolve();
+  const login = async (email, password) => {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    
+    // Load user profile from Firestore
+    const profile = await getUserProfile(userCredential.user.uid);
+    setUserProfile(profile);
+    
+    return userCredential;
   };
 
-  const signup = (email, password, displayName) => {
-    console.log('Signing up:', email, displayName);
-    const userData = {
-      email,
+  const signup = async (email, password, displayName) => {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+    await updateProfile(userCredential.user, {
+       displayName: displayName
+    });
+    // Create user profile in Firestore
+    await createUserProfile(userCredential.user.uid, {
+      email: email,
       displayName: displayName || email.split('@')[0],
-      uid: 'user-' + Date.now()
-    };
-    setUser(userData);
-    localStorage.setItem('ecofoot-user', JSON.stringify(userData));
-    return Promise.resolve();
+    });
+    
+    // Load the created profile
+    const profile = await getUserProfile(userCredential.user.uid);
+    setUserProfile(profile);
+    
+    return userCredential;
   };
 
   const logout = () => {
-    console.log('Logging out');
-    setUser(null);
-    localStorage.removeItem('ecofoot-user');
-    return Promise.resolve();
+    setUserProfile(null);
+    return signOut(auth);
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      setUser(user);
+      
+      if (user) {
+        // Load user profile when auth state changes
+        const profile = await getUserProfile(user.uid);
+        setUserProfile(profile);
+      } else {
+        setUserProfile(null);
+      }
+      
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
 
   const value = {
     user,
+    userProfile,
     login,
     signup,
     logout

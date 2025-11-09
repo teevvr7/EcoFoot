@@ -4,7 +4,8 @@ import { useActivities } from '../hooks/useActivities';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const { user, logout } = useAuth();
+  const { user, userProfile, logout } = useAuth();
+  const displayName = user?.displayName || userProfile?.displayName || 'Friend';
   const { getTodayActivities, getTotalPoints, getTotalCarbonReduced } = useActivities();
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const Dashboard = () => {
       <div className="flex justify-between items-start mb-8">
         <div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Welcome back, {user?.displayName}!
+            Welcome back, {displayName}!
           </h1>
           <p className="text-gray-600">Track your environmental impact</p>
         </div>

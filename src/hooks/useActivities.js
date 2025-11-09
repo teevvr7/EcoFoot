@@ -1,58 +1,85 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { 
+  subscribeToUserActivities, 
+  logActivity, 
+  updateUserProfile 
+} from '../services/firebaseService';
 
 export const useActivities = () => {
-  const { user } = useAuth();
+  const { user, userProfile } = useAuth();
   const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Load activities from localStorage
+  // Real-time subscription to activities
   useEffect(() => {
-    if (user) {
-      const savedActivities = localStorage.getItem(`ecofoot-activities-${user.uid}`);
-      if (savedActivities) {
-        setActivities(JSON.parse(savedActivities));
-      }
+    if (!user) {
+      setActivities([]);
+      return;
     }
+
+    const unsubscribe = subscribeToUserActivities(user.uid, (userActivities) => {
+      setActivities(userActivities);
+    });
+
+    return unsubscribe;
   }, [user]);
 
-  const addActivity = (activityData) => {
+  const addActivity = async (activityData) => {
     if (!user) throw new Error('User must be logged in');
 
-    const newActivity = {
-      id: Date.now().toString(),
-      ...activityData,
-      userId: user.uid,
-      timestamp: new Date().toISOString()
-    };
+    setLoading(true);
+    try {
+      // Add user ID to activity data
+      const activityWithUser = {
+        ...activityData,
+        userId: user.uid,
+        userName: userProfile?.displayName || user.email
+      };
 
-    const updatedActivities = [newActivity, ...activities];
-    setActivities(updatedActivities);
-    
-    // Save to localStorage
-    localStorage.setItem(`ecofoot-activities-${user.uid}`, JSON.stringify(updatedActivities));
+      // Save activity to Firebase
+      await logActivity(activityWithUser);
 
-    return newActivity;
+      // Update user's total points and carbon reduced
+      if (userProfile) {
+        const newTotalPoints = (userProfile.totalPoints || 0) + activityData.points;
+        const newCarbonReduced = (userProfile.totalCarbonReduced || 0) + Math.max(0, -activityData.co2);
+        
+        await updateUserProfile(user.uid, {
+          totalPoints: newTotalPoints,
+          totalCarbonReduced: newCarbonReduced
+        });
+      }
+
+    } catch (error) {
+      console.error('Error adding activity:', error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getTodayActivities = () => {
     const today = new Date().toDateString();
     return activities.filter(activity => {
-      const activityDate = new Date(activity.timestamp).toDateString();
+      if (!activity.timestamp) return false;
+      const activityDate = new Date(activity.timestamp.toDate()).toDateString();
       return activityDate === today;
     });
   };
 
   const getTotalPoints = () => {
-    return activities.reduce((total, activity) => total + activity.points, 0);
+    return userProfile?.totalPoints || 0;
   };
 
   const getTotalCarbonReduced = () => {
-    return activities.reduce((total, activity) => total + Math.max(0, -activity.co2), 0);
+    return userProfile?.totalCarbonReduced || 0;
   };
 
   return {
     activities,
     addActivity,
+    loading,
     getTodayActivities,
     getTotalPoints,
     getTotalCarbonReduced

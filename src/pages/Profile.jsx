@@ -4,7 +4,9 @@ import { useActivities } from '../hooks/useActivities';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-  const { user, logout } = useAuth();
+  const { user, userProfile, logout } = useAuth();
+  const displayName = user?.displayName || userProfile?.displayName || 'Not set';
+  const email = user?.email || userProfile?.email || 'Not set';
   const { activities, getTotalPoints, getTotalCarbonReduced } = useActivities();
   const navigate = useNavigate();
 
@@ -52,11 +54,11 @@ const Profile = () => {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Display Name</label>
-                <p className="mt-1 text-gray-900 font-medium">{user?.displayName}</p>
+                <p className="mt-1 text-gray-900 font-medium">{displayName}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Email</label>
-                <p className="mt-1 text-gray-900">{user?.email}</p>
+                <p className="mt-1 text-gray-900">{email}</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">Eco Rank</label>
