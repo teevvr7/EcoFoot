@@ -42,7 +42,7 @@ const Leaderboard = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-2">Global Leaderboard</h1>
       <p className="text-gray-600 mb-8">Live competition with eco-warriors</p>
 
@@ -65,8 +65,8 @@ const Leaderboard = () => {
       {/* Leaderboard */}
       <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-6">
         <div className="grid grid-cols-12 gap-4 p-4 bg-gray-100 font-semibold text-gray-700">
-          <div className="col-span-1">Rank</div>
-          <div className="col-span-8">User</div>
+          <div className="col-span-2 sm:col-span-1">Rank</div>
+          <div className="col-span-7 sm:col-span-8">User</div>
           <div className="col-span-3 text-right">Points</div>
         </div>
         
@@ -83,13 +83,13 @@ const Leaderboard = () => {
               <div key={player.id} className={`grid grid-cols-12 gap-4 p-4 border-b border-gray-200 ${
                 isCurrentUser ? 'bg-eco-green bg-opacity-10' : ''
               } ${rank <= 3 ? 'bg-opacity-20' : ''}`}>
-                <div className="col-span-1 flex items-center">
+                <div className="col-span-2 sm:col-span-1 flex items-center">
                   {rank === 1 && <span className="text-yellow-500">🥇</span>}
                   {rank === 2 && <span className="text-gray-500">🥈</span>}
                   {rank === 3 && <span className="text-orange-500">🥉</span>}
                   {rank > 3 && <span className="text-sm font-bold text-gray-600">#{rank}</span>}
                 </div>
-                <div className="col-span-8 flex items-center space-x-3">
+                <div className="col-span-7 sm:col-span-8 flex items-center space-x-3">
                   <span className={`font-medium truncate ${
                     isCurrentUser ? 'text-eco-green font-bold' : 'text-gray-800'
                   }`}>
@@ -110,7 +110,7 @@ const Leaderboard = () => {
       </div>
       
       {/* Tips Section */}
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Earn More Points</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">

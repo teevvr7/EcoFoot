@@ -43,13 +43,13 @@ const Profile = () => {
   const rank = getRank(totalPoints);
 
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Your Profile</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Personal Info */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Personal Info</h2>
             <div className="space-y-4">
               <div>
@@ -68,7 +68,7 @@ const Profile = () => {
           </div>
 
           {/* Activity Breakdown */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Activity Breakdown</h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="text-center p-4 bg-green-50 rounded-lg">
@@ -85,7 +85,7 @@ const Profile = () => {
         
         {/* Stats Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Impact</h2>
             <div className="space-y-4">
               {stats.map((stat, index) => (
@@ -99,7 +99,7 @@ const Profile = () => {
           </div>
           
           {/* Actions */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
             <h3 className="font-semibold text-gray-800 mb-3">Actions</h3>
             <button
               onClick={handleLogout}

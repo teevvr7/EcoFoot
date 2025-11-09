@@ -2,12 +2,12 @@ import React from 'react';
 
 const Friends = () => {
   return (
-    <div className="max-w-4xl mx-auto p-8">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 md:p-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-8">Friends</h1>
       
-      <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Add Friends</h2>
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="email"
             placeholder="Enter friend's email"
@@ -19,7 +19,7 @@ const Friends = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg p-6">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Friend System</h2>
         <p className="text-gray-600">Compete with friends and see who's the eco-champion!</p>
         <p className="text-gray-500 text-sm mt-2">Friend features coming soon!</p>
