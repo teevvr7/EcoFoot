@@ -147,5 +147,5 @@ The code in this project is based on publicly available documentation and open-s
 
 *   Teevanraj      
 *   Nalan           
-*   Sujenizwaran    
+*   Sujenizswaran    
 *   Dhanesvar       
