@@ -145,7 +145,7 @@ The code in this project is based on publicly available documentation and open-s
 
 ## Creators
 
-*   Teevanraj       - [GitHub Profile/Email]
-*   Nalan           - [GitHub Profile/Email]
-*   Sujeneswaran    - [GitHub Profile/Email]
-*   Dhanesvar       - [GitHub Profile/Email]
+*   Teevanraj      
+*   Nalan           
+*   Sujenizwaran    
+*   Dhanesvar       
